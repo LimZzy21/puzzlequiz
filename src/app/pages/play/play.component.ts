@@ -15,7 +15,7 @@ export class PlayComponent {
   formRequest: FormGroup
   constructor(private router: Router, private fb: FormBuilder) {
     this.formRequest = this.fb.group({
-      number: 10,
+      amount: 10,
       category: 'Any Category',
       difficulty: 'Any Difficulty',
       type: 'Any Type'
