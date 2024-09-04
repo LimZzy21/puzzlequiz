@@ -1,0 +1,7 @@
+<div class="container">
+    <div class="row" >
+        <h3 (click)="showdata()" >{{quizzes.results[currentQuestion].question}}</h3>
+        
+        <button  type="button" *ngFor="let ans of selectedItems" class="btn btn-outline-secondary w-50">{{ans}}</button>
+    </div>
+</div>
