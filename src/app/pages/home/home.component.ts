@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { QuizzesServiceService } from '../../service/quizzes.service';
 import { HttpClientModule } from '@angular/common/http';
 import { quizzBackend } from '../../models/quizz.module';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 
 
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [HttpClientModule, NgFor],
+  imports: [HttpClientModule, NgFor, NgIf],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
   providers: [QuizzesServiceService]
@@ -27,6 +27,7 @@ selectedItems:string[] = []
 correctAnswers:number = 0
 currentQuestion:number = 0
 
+isShowModal:boolean = false
 
   ngOnInit(): void {
     this.QuizzesService.getQuizzes().subscribe({
@@ -52,7 +53,7 @@ currentQuestion:number = 0
 
     combined.forEach(el=>this.shuffleArray(el))
    
-    console.log('Перемішаний масив:', combined);
+  
     this.shuffledAnswers = combined
   }
 
@@ -66,8 +67,39 @@ currentQuestion:number = 0
 
 
 
+
   showdata(){
     console.log(this.quizzes);
+  }
+
+ 
+  answerQuizz(ans:string){
+    if(ans == this.quizzes.results[this.currentQuestion].correct_answer){
+      this.correctAnswers++
+    }
+    console.log(this.currentQuestion);
+    this.currentQuestion++
+    this.selectedItems = this.shuffledAnswers[this.currentQuestion]
+
+    if(this.currentQuestion == 9){
+      this.currentQuestion = 200
+      this.isShowModal=true
+    }
+  }
+
+  fetchNewQuestions(){
+    this.QuizzesService.getQuizzes().subscribe({
+      next: data => {
+        this.quizzes = data
+        this.handleArrays()
+        this.selectedItems = this.shuffledAnswers[0]
+        this.currentQuestion = 0
+        this.correctAnswers = 0
+        this.isShowModal = false
+      }
+    })
+    
+    
     
   }
 
