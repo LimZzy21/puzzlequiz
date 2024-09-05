@@ -16,9 +16,9 @@ export class PlayComponent {
   constructor(private router: Router, private fb: FormBuilder) {
     this.formRequest = this.fb.group({
       amount: 10,
-      category: 'Any Category',
-      difficulty: 'Any Difficulty',
-      type: 'Any Type'
+      category: '',
+      difficulty: '',
+      type: ''
     });
   }
 
@@ -30,8 +30,6 @@ export class PlayComponent {
     this.router.navigate(['/'],{
       queryParams: this.formRequest.value
     })
-    console.log(this.formRequest.value);
-
   }
 
 }

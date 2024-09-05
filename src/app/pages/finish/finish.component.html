@@ -1,1 +1,18 @@
-<p>finish works!</p>
+<div class="container align-items-center justify-content-center text-center" style="height: 75vh;">
+    <div class="row">
+        <h1  class="display-2" >Last quizz:</h1>
+        <h2 class="display-6">Time spend: {{((statistic[0].timeSpend) / 1000)}} seconds</h2>
+        
+         <h2 class="display-6">Correct answers: {{(statistic[0].correctAnswers)}}/{{statistic[0].amount}}</h2> 
+         <h2 class="display-6">Time per question: {{((statistic[0].amount) / (statistic[0].timeSpend / 1000)) | number:'1.2-2' }} seconds</h2> 
+    </div>
+    <div>
+        <h1 class="display-2" >Resent quizzes:</h1>
+        <div class="row mt-4 border rounded" *ngFor="let item of statistic.slice(1);">
+            <h2 class="display-6">Time spend: {{((item.timeSpend) / 1000)}} seconds</h2>
+            <h2 class="display-6">Correct answers: {{(item.correctAnswers)}}/{{item.amount}}</h2>
+            <h2 class="display-6">Time per question: {{((item.amount) / (item.timeSpend / 1000)) | number:'1.2-2'}} seconds</h2>
+        </div>
+    </div>
+
+</div>

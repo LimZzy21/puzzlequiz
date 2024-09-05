@@ -19,7 +19,7 @@
             style="display: flex; align-items: center; justify-content: center; height: 70vh;">
             <div class="row" *ngIf="currentQuestion != 200">
                 <div class="col-12 row ">
-                    <h3 (click)="showdata()" class="col-12" [innerHTML]="quizzes.results[currentQuestion]?.question">
+                    <h3 class="col-12" [innerHTML]="quizzes.results[currentQuestion]?.question">
                     </h3>
                     <p [innerHTML]="quizzes.results[currentQuestion]?.category" class="col-12"></p>
                     <div class="row gap-3">
@@ -44,18 +44,7 @@
 
             <div id="liveAlertPlaceholder"></div>
 
-            <div *ngIf="isShowModal" class="toast align-items-center w-100" role="alert" aria-live="assertive"
-                aria-atomic="true" style="display:flex;">
-                <div class="d-flex row m-3">
-                    <div class="toast-body col-12">
-                        <h1>Well played, your result: {{correctAnswers}}/10</h1>
-                        <button type="button" (click)="fetchNewQuestions()" class="btn btn-success col-5 ms-2">Play one
-                            more
-                            time!</button>
-                        <button type="button" class="btn btn-light col-5 ms-2">Not now (check results)</button>
-                    </div>
-                </div>
-            </div>
+           
         </div>
     </ng-template>
 </div>

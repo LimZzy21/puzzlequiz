@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { QuizzesServiceService } from '../../service/quizzes.service';
 import { HttpClientModule } from '@angular/common/http';
 import { quizzBackend } from '../../models/quizz.module';
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import {  NgFor, NgIf } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 
 
@@ -15,12 +16,34 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './home.component.css',
   providers: [QuizzesServiceService]
 })
-export class HomeComponent implements OnInit {
-  constructor(private QuizzesService: QuizzesServiceService, private route: ActivatedRoute) { }
+export class HomeComponent implements OnInit, OnDestroy {
+  constructor(private QuizzesService: QuizzesServiceService, private route: ActivatedRoute, private router:Router) { }
 
   quizzes: quizzBackend = {
     responce_code: 202,
     results: []
+  }
+
+  timeElapsed: number = 0;
+  private intervalId:any ;
+  private startTime: number = 0;
+
+  startStopwatch(): void {
+    this.startTime = Date.now();
+    this.intervalId = setInterval(() => {
+      this.timeElapsed = Date.now() - this.startTime;      
+    }, 1000); 
+  }
+
+  stopStopwatch(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId); 
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.finishQuizz()
+    this.stopStopwatch(); 
   }
 
   loading:boolean = false
@@ -33,9 +56,8 @@ export class HomeComponent implements OnInit {
   correctAnswers: number = 0
   currentQuestion: number = 0
 
-  isShowModal: boolean = false
 
-  statisticArray:string[] = []
+  statisticArray:object[] = []
 
   amount: number = 10
   category: string  = ''
@@ -51,11 +73,22 @@ export class HomeComponent implements OnInit {
       this.difficulty = params['difficulty'];
       this.type = params['type'];
     })
-    
+    this.getLocalStats()
       this.fetchNewQuestions()
 
   }
 
+
+  getLocalStats(){
+    if (typeof window !== 'undefined') { 
+      let stat:any = localStorage.getItem('statistic')
+      if(stat){
+        stat = JSON.parse(stat)
+        this.statisticArray = stat
+      }
+      
+    }
+  }
 
 
 
@@ -97,6 +130,8 @@ export class HomeComponent implements OnInit {
     }else{
       this.isQuizz = !this.isQuizz 
       this.currentQuestion = 0
+      this.startStopwatch();
+      
       
     }
 
@@ -107,11 +142,28 @@ export class HomeComponent implements OnInit {
     }
   }
 
+
+  finishQuizz(): void {
+    if (typeof window !== 'undefined') { 
+     const statArray = {
+        timeSpend: this.timeElapsed,
+        correctAnswers: this.correctAnswers,
+        amount: this.amount ? this.amount : 10
+      };
+
+      this.statisticArray.unshift(statArray)
+      
+      const stringyfiedArray = JSON.stringify(this.statisticArray);
+      localStorage.setItem('statistic', stringyfiedArray);
+    }
+  }
+
+
   handleArrays() {
 
     let combined: string[][] = []
     this.quizzes.results.forEach(el => {
-      const question = [...el.incorrect_answers, el.correct_answer,]
+      const question = [...el.incorrect_answers, el.correct_answer]
 
       combined.push(question)
     });
@@ -133,9 +185,7 @@ export class HomeComponent implements OnInit {
 
 
 
-  showdata() {
-    console.log(this.quizzes);
-  }
+ 
 
 
   answerQuizz(ans: string) {
@@ -147,7 +197,7 @@ export class HomeComponent implements OnInit {
 
     if (this.currentQuestion == 10) {
       this.currentQuestion = 200
-      this.isShowModal = true
+        this.router.navigate(['finish'])
     }
     
   }
@@ -171,7 +221,6 @@ export class HomeComponent implements OnInit {
         this.selectedItems = this.shuffledAnswers[0]
         this.currentQuestion = 0
         this.correctAnswers = 0
-        this.isShowModal = false
   }
 
 }
