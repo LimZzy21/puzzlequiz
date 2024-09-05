@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { QuizzesServiceService } from '../../service/quizzes.service';
 import { HttpClientModule } from '@angular/common/http';
 import { quizzBackend } from '../../models/quizz.module';
-import { NgFor, NgIf } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
 
@@ -22,6 +22,11 @@ export class HomeComponent implements OnInit {
     responce_code: 202,
     results: []
   }
+
+  loading:boolean = false
+
+  isQuizz:boolean = false
+
   shuffledAnswers: string[][] = []
   selectedItems: string[] = []
 
@@ -29,6 +34,8 @@ export class HomeComponent implements OnInit {
   currentQuestion: number = 0
 
   isShowModal: boolean = false
+
+  statisticArray:string[] = []
 
   amount: number = 10
   category: string  = ''
@@ -44,15 +51,12 @@ export class HomeComponent implements OnInit {
       this.difficulty = params['difficulty'];
       this.type = params['type'];
     })
-    if(this.category || this.difficulty || this.type){
-      this.fetchCustomQuestions()
-      
-    }else{
-      this.fetchQuestions()
-    }
     
+      this.fetchNewQuestions()
 
   }
+
+
 
 
   fetchQuestions(): void {
@@ -80,6 +84,26 @@ export class HomeComponent implements OnInit {
     if (this.quizzes.results.length > 0) {
       this.handleArrays();
       this.selectedItems = this.shuffledAnswers[0] || [];
+      this.loading = false
+    }
+  }
+
+  toggleQuizz(){
+
+    if(this.isQuizz){
+      this.isQuizz = !this.isQuizz 
+
+      this.currentQuestion = 200
+    }else{
+      this.isQuizz = !this.isQuizz 
+      this.currentQuestion = 0
+      
+    }
+
+    if(this.currentQuestion == 200 && this.quizzes.results.length >0){
+      this.quizzes.results = []
+      this.loading = true
+      this.fetchNewQuestions()
     }
   }
 
@@ -133,6 +157,7 @@ export class HomeComponent implements OnInit {
     if (this.category || this.difficulty || this.type) {
       this.fetchCustomQuestions()
       this.resetPlaySettings()
+      this.isQuizz == true
 
     } else {
       this.fetchQuestions()

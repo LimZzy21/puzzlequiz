@@ -1,24 +1,61 @@
-<div class="container">
-    <div class="row" *ngIf="currentQuestion != 200">
-        <h3 (click)="showdata()" [innerHTML]="quizzes.results[currentQuestion]?.question"></h3>
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;Category: {{quizzes.results[currentQuestion]?.category}}</p>
-        <button (click)="answerQuizz(ans)" type="button" *ngFor="let ans of selectedItems" [innerHTML]="ans"
-            class="btn btn-outline-secondary w-50 text-primary"></button>
+<div class="container" style="height: 100vh;">
 
-        <h4 class="text-end">Correct: <span class="text-success">{{correctAnswers}}</span></h4>
+    <div *ngIf="loading && isQuizz; else content">
+        <p>Loading...</p>
     </div>
 
-    <div id="liveAlertPlaceholder"></div>
 
-    <div *ngIf="isShowModal" class="toast align-items-center w-100" role="alert" aria-live="assertive"
-        aria-atomic="true" style="display:flex;">
-        <div class="d-flex row m-3">
-            <div class="toast-body col-12">
-                <h1>Well played, your result: {{correctAnswers}}/10</h1>
-                <button type="button" (click)="fetchNewQuestions()" class="btn btn-success col-5 ms-2">Play one more
-                    time!</button>
-                <button type="button" class="btn btn-light col-5 ms-2">Not now (check results)</button>
-            </div>
+    <div *ngIf="!isQuizz" style="display: flex; align-items: center; justify-content: center; height: 80vh;">
+        <div style="text-align: center" class="w-100 ">
+            <button type="button" style="width: 75%;" class="btn btn-success startq" (click)="toggleQuizz()">
+                <strong>I'm lucky!</strong>
+            </button>
         </div>
     </div>
+
+
+    <ng-template #content>
+        <div *ngIf="isQuizz" class="container"
+            style="display: flex; align-items: center; justify-content: center; height: 70vh;">
+            <div class="row" *ngIf="currentQuestion != 200">
+                <div class="col-12 row ">
+                    <h3 (click)="showdata()" class="col-12" [innerHTML]="quizzes.results[currentQuestion]?.question">
+                    </h3>
+                    <p [innerHTML]="quizzes.results[currentQuestion]?.category" class="col-12"></p>
+                    <div class="row gap-3">
+                        <button (click)="answerQuizz(ans)" type="button" *ngFor="let ans of selectedItems"
+                            [innerHTML]="ans" class="btn btn-outline-secondary  text-primary  gap-col quest"></button>
+                    </div>
+
+                </div>
+
+                <div class="mt-3 row ">
+                    <div class="col-8 justify-content-center align-items-center">
+                        <button type="button" class="btn btn-danger  " (click)="toggleQuizz()">End quizz</button>
+                    </div>
+                    <div class="col-4 text-end">
+                        <h3>{{currentQuestion+1}}/10</h3>
+                        <h4 class=" col-3">Correct: <span class="text-success">{{correctAnswers}}</span></h4>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="liveAlertPlaceholder"></div>
+
+            <div *ngIf="isShowModal" class="toast align-items-center w-100" role="alert" aria-live="assertive"
+                aria-atomic="true" style="display:flex;">
+                <div class="d-flex row m-3">
+                    <div class="toast-body col-12">
+                        <h1>Well played, your result: {{correctAnswers}}/10</h1>
+                        <button type="button" (click)="fetchNewQuestions()" class="btn btn-success col-5 ms-2">Play one
+                            more
+                            time!</button>
+                        <button type="button" class="btn btn-light col-5 ms-2">Not now (check results)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
 </div>
