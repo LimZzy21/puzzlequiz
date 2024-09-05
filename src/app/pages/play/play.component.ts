@@ -22,8 +22,6 @@ export class PlayComponent {
     });
   }
 
-
-
   params: object = {}
 
   navigateWithParams() {

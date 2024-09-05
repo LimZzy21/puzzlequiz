@@ -56,14 +56,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   correctAnswers: number = 0
   currentQuestion: number = 0
 
-
   statisticArray:object[] = []
 
   amount: number = 10
   category: string  = ''
   difficulty: string  = ''
   type: string  = ''
-
 
 
   ngOnInit(): void {
@@ -78,7 +76,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   }
 
-
   getLocalStats(){
     if (typeof window !== 'undefined') { 
       let stat:any = localStorage.getItem('statistic')
@@ -89,7 +86,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       
     }
   }
-
 
 
   fetchQuestions(): void {
@@ -131,8 +127,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.isQuizz = !this.isQuizz 
       this.currentQuestion = 0
       this.startStopwatch();
-      
-      
     }
 
     if(this.currentQuestion == 200 && this.quizzes.results.length >0){
@@ -141,7 +135,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.fetchNewQuestions()
     }
   }
-
 
   finishQuizz(): void {
     if (typeof window !== 'undefined') { 
@@ -157,7 +150,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       localStorage.setItem('statistic', stringyfiedArray);
     }
   }
-
 
   handleArrays() {
 
@@ -181,12 +173,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
     return array;
   }
-
-
-
-
- 
-
 
   answerQuizz(ans: string) {
     if (ans == this.quizzes.results[this.currentQuestion].correct_answer) {
