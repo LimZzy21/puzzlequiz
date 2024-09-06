@@ -1,0 +1,10 @@
+    [build]
+        base = "testTask"
+        command = "npn run build:prod"
+        publis= "dist/browser"
+
+        [[redirects]]
+        from = "/*"
+        to = "/index.html"
+        status = 200
+
